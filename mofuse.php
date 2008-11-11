@@ -4,7 +4,7 @@ Plugin Name: MoFuse Plugin
 Plugin URI: http://www.mofuse.com
 Description: MoFuse's Wordpress plugin. If you need a MoFuse account, visit <a href="http://www.mofuse.com">www.mofuse.com</a> and create a free account and you can have a mobile version of your Wordpress blog up and running in just seconds.
 Author: MoFuse
-Version: 0.5.1 
+Version: 0.6.2 
 Author URI: http://www.mofuse.com
 */
 
@@ -48,10 +48,7 @@ Author URI: http://www.mofuse.com
 	function sendtoMobile() {
 		global $mf_sid;
 		global $mf_cname;
-		if ($mf_cname) {
-			$mf_cname=str_replace("http://", "", $mf_cname);
-			header("Location: http://$mf_cname");
-		} else {
+		if ($_SESSION['mofuse_nomobile']==1 || $_GET['nomobile']==1) { $_SESSION['mofuse_nomobile']=1; } else {
 			header("Location: http://$mf_sid.mofuse.mobi");
 		}
 	}
@@ -106,14 +103,8 @@ Author URI: http://www.mofuse.com
 			<p style="margin: 5px 0 0 10px;">
 	        http://<input name="mf_sid" type="text" size="20" value="<?php echo $mf_sid; ?>">.mofuse.mobi
 			<br /><span style="color: #666666;">This is in your MoFuse URL, for example http://myblog.mofuse.mobi -- <b>myblog</b> would be your Site ID.</span>
-			</p>
-
-			<p style="font-size: 17px; color: #333333; margin: 20px 0 0 0;"><?php _e("Custom Domain:", 'mf_trans_domain' ); ?></p>
-			<p style="margin: 5px 0 0 10px;">
-	        http://<input name="mf_cname" type="text" size="40" value="<?php echo $mf_cname; ?>">
-			<br /><span style="color: #666666;">This feature only works if you have properly setup your custom domain name.</span>
-			</p>
-            
+            <br /><span style="color: #666666;">If you use a custom domain name, MoFuse will send your viewer to that domain instead of the mofuse.mobi domain -- automatically.</span>
+			</p>            
         </div>
 
 		<div style="margin: 0 0 20px 0; padding: 10px; border: 1px solid #012D7E; background-color: #fbfbfb;">
