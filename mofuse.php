@@ -4,7 +4,7 @@ Plugin Name: MoFuse Plugin
 Plugin URI: http://www.mofuse.com/wordpress
 Description: MoFuse's Wordpress plugin. If you need a MoFuse account, visit <a href="http://www.mofuse.com">www.mofuse.com</a> and create a free account and you can have a mobile version of your Wordpress blog up and running in just seconds.
 Author: MoFuse
-Version: 0.6.3 
+Version: 0.8 
 Author URI: http://www.mofuse.com
 */
 
@@ -21,12 +21,58 @@ Author URI: http://www.mofuse.com
 	}
 
 // Mobile detect & redirect
-	
-	$mf_ua=urlencode($_SERVER["HTTP_USER_AGENT"]);
-	$mf_url="http://api.mofuse.com/?action=mobiledetect&useragent=$mf_ua";
-	if (@file_get_contents($mf_url)==1 && $_GET['mf_nr']!=1) {
-		$mf_ismobile=1;
-	}
+	$mf_ua=$_SERVER['HTTP_USER_AGENT'];
+	$mf_ismobile = stripos($ac, 'application/vnd.wap.xhtml+xml') !== false
+    	    || $op != ''
+	        || stripos($mf_ua, 'sony') !== false 
+    	    || stripos($mf_ua, 'symbian') !== false 
+        	|| stripos($mf_ua, 'nokia') !== false 
+	        || stripos($mf_ua, 'samsung') !== false 
+    	    || stripos($mf_ua, 'mobile') !== false
+        	|| stripos($mf_ua, 'windows ce') !== false
+	        || stripos($mf_ua, 'epoc') !== false
+    	    || stripos($mf_ua, 'opera mini') !== false
+        	|| stripos($mf_ua, 'nitro') !== false
+	        || stripos($mf_ua, 'j2me') !== false
+    	    || stripos($mf_ua, 'midp-') !== false
+        	|| stripos($mf_ua, 'cldc-') !== false
+	        || stripos($mf_ua, 'netfront') !== false
+    	    || stripos($mf_ua, 'mot') !== false
+        	|| stripos($mf_ua, 'up.browser') !== false
+	        || stripos($mf_ua, 'up.link') !== false
+    	    || stripos($mf_ua, 'audiovox') !== false
+        	|| stripos($mf_ua, 'blackberry') !== false
+	        || stripos($mf_ua, 'ericsson,') !== false
+    	    || stripos($mf_ua, 'panasonic') !== false
+        	|| stripos($mf_ua, 'philips') !== false
+	        || stripos($mf_ua, 'sanyo') !== false
+    	    || stripos($mf_ua, 'sharp') !== false
+        	|| stripos($mf_ua, 'sie-') !== false
+	        || stripos($mf_ua, 'portalmmm') !== false
+    	    || stripos($mf_ua, 'blazer') !== false
+        	|| stripos($mf_ua, 'avantgo') !== false
+	        || stripos($mf_ua, 'danger') !== false
+    	    || stripos($mf_ua, 'palm') !== false
+        	|| stripos($mf_ua, 'series60') !== false
+	        || stripos($mf_ua, 'palmsource') !== false
+    	    || stripos($mf_ua, 'pocketpc') !== false
+        	|| stripos($mf_ua, 'smartphone') !== false
+	        || stripos($mf_ua, 'rover') !== false
+    	    || stripos($mf_ua, 'ipaq') !== false
+        	|| stripos($mf_ua, 'au-mic,') !== false
+	        || stripos($mf_ua, 'alcatel') !== false
+    	    || stripos($mf_ua, 'ericy') !== false
+        	|| stripos($mf_ua, 'up.link') !== false
+	        || stripos($mf_ua, 'vodafone/') !== false
+    	    || stripos($mf_ua, 'wap1.') !== false
+        	|| stripos($mf_ua, 'wap2.') !== false
+			|| stripos($mf_ua, 'teleca') !== false
+			|| stripos($mf_ua, 'playstation') !== false
+			|| stripos($mf_ua, 'nitro') !== false
+			|| stripos($mf_ua, 'nintendo wii') !== false
+			|| stripos($mf_ua, 'iphone') !== false
+			|| stripos($mf_ua, 'ipod') !== false;
+			
 	
 	function mf_hpd($currenturl, $mf_subd) {
 		if($currenturl=="" || $currenturl=="/" || $currenturl==$mf_subd) {
@@ -36,8 +82,8 @@ Author URI: http://www.mofuse.com
 		}
 	}
 
-	if ($mf_redirect=='y') {
-		if($mf_ismobile==1){ 
+	if ($mf_redirect=='y' && $_GET['nomobile']!=1) {
+		if($mf_ismobile){ 
 			if (mf_hpd($currenturl, $mf_subd)) {
 				//header("Location: http://www.google.com");
 				add_action('wp_head', "sendtoMobile",3);
@@ -48,7 +94,10 @@ Author URI: http://www.mofuse.com
 	function sendtoMobile() {
 		global $mf_sid;
 		global $mf_cname;
-		if ($_SESSION['mofuse_nomobile']==1 || $_GET['nomobile']==1) { $_SESSION['mofuse_nomobile']=1; } else {
+		if ($mf_cname) {
+			$mf_cname=str_replace("http://", "", $mf_cname);
+			header("Location: http://$mf_cname");
+		} else {
 			header("Location: http://$mf_sid.mofuse.mobi");
 		}
 	}
@@ -63,7 +112,7 @@ Author URI: http://www.mofuse.com
 	}
 
 	function mf_toplevel_page() {
-		echo '<img src="http://mofuse.com/images/logo_small.png" style="margin:20px 0px 20px 20px;" />';
+		echo '<img src="http://mofuse.com/images/logo_wp_plugin.png" style="margin:20px 0px 0px 20px;" />';
 	
 	    if($_POST['mf_hidden']==1) {
 			$mf_sid=$_POST['mf_sid'];
@@ -86,28 +135,24 @@ Author URI: http://www.mofuse.com
 	$mf_redirect=get_option("mf_redirect");
 	$mf_sms=get_option("mf_sms");
 	$mf_cname=get_option("mf_cname");
-
-// Show stuff on the MoFuse Options page
-    echo '<div class="wrap">';
-//    echo "<h2>" . __( 'MoFuse Plugin Options', 'mf_trans_domain' ) . "</h2>";
-	echo '<p style="margin-top: 10px; padding: 10px; background-color: #ffffec; font-size: 17px; border: 1px solid #ebebeb; color: #333;">
-	<img src="http://snapple.mofuse.com/users/images/icons/exclamation.png" align="absmiddle" style="margin-right: 5px;" /> 
-	If you don\'t already have a MoFuse account you can visit <a href="http://www.mofuse.com" target="_blank">www.mofuse.com</a> and create one for free.</p>';    
     ?>
 
+	<div class="wrap">
 	<form name="form1" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
 		<input type="hidden" name="mf_hidden" value="1">
-
-		<div style="margin: 0 0 20px 0; padding: 10px; border: 1px solid #012D7E; background-color: #fbfbfb;">
+	<p style="margin-top: 10px; padding: 10px; border-bottom: 1px solid #ebebeb; border-top: 1px solid #ebebeb; font-size: 14px;">
+	<a href="http://app.mofuse.com" style="margin-right: 20px; text-decoration: none;">Your MoFuse Account Dashboard</a> <a href="http://www.mofuse.com" style=" text-decoration: none;">Create a Mobile Site</a>
+	</p>
+    
+		<div style="margin: 0 0 20px 0; padding: 10px; border: 1px solid #ebebeb; background-color: #fbfbfb;">
 			<p style="font-size: 17px; color: #333333; margin: 0 0 0 0;"><?php _e("Your MoFuse Site ID:", 'mf_trans_domain' ); ?></p>
 			<p style="margin: 5px 0 0 10px;">
 	        http://<input name="mf_sid" type="text" size="20" value="<?php echo $mf_sid; ?>">.mofuse.mobi
-			<br /><span style="color: #666666;">This is in your MoFuse URL, for example http://myblog.mofuse.mobi -- <b>myblog</b> would be your Site ID.</span>
-            <br /><span style="color: #666666;">If you use a custom domain name, MoFuse will send your viewer to that domain instead of the mofuse.mobi domain -- automatically.</span>
+			<br /><span style="color: #666666;">This is in your MoFuse URL, for example http://<em>myblog</em>.mofuse.mobi -- <b>myblog</b> would be your Site ID.<br />If you are using a custom domain name, we will forward the visitor to that domain name automatically.</span>
 			</p>            
         </div>
 
-		<div style="margin: 0 0 20px 0; padding: 10px; border: 1px solid #012D7E; background-color: #fbfbfb;">
+		<div style="margin: 0 0 20px 0; padding: 10px; border: 1px solid #ebebeb; background-color: #fbfbfb;">
 	        <p style="font-size: 17px; color: #333333; margin: 0 0 0 0;"><?php _e("Enable Automatic Detect & Redirect:", 'mf_trans_domain' ); ?></p>
 			<p style="margin: 5px 0 0 10px;">
 			<label>
@@ -136,7 +181,6 @@ Author URI: http://www.mofuse.com
 
 	</form>
 	</div>
-
 <?php
 }
 ?>
