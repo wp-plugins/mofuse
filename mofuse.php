@@ -4,7 +4,7 @@ Plugin Name: MoFuse Plugin
 Plugin URI: http://www.mofuse.com/wordpress/
 Description: MoFuse's Wordpress plugin. If you need a MoFuse account, visit <a href="http://www.mofuse.com">www.mofuse.com</a> and create a free account and you can have a mobile version of your Wordpress blog up and running in just seconds.
 Author: David Berube
-Version: 0.9m
+Version: 0.9n
 Author URI: http://daveberube.com/
 */
 

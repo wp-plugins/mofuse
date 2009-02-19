@@ -7,13 +7,13 @@ Stable tag: 2.7
 
 This plugin works with a MoFuse account.  This plugin will automatically detect and redirect mobile visitors to the mobile-friendly version of your blog. Will also redirect iPhone and Android visitors to a special iPhone and Android version of your blog. This version includes MoFuse Deep Link which mobilizes older blog posts.
 
-=== Description ===
+== Description ==
 
 MoFuse (http://www.mofuse.com) is a service that allows bloggers to easily create a mobile-friendly version of their blog for free.
 
 This plugin allows you to automatically detect and redirect your mobile visitors to the mobile-friendly version of your blog.
 
-=== Installation ===
+== Installation ==
 
 You can install the MoFuse plugin by unpacking the distributed plugin file in the wp-content/plugins directory of your WordPress installation.
 
@@ -25,7 +25,7 @@ From the "MoFuse Options" tab you must enter in your MoFuse Site ID. Your MoFuse
 
 From the "MoFuse Options" tab you can tell the MoFuse plugin whether or not you want to automatically detect & redirect mobile visitors to your blog to your MoFuse mobile site.
 
-=== Frequently Asked Questions ===
+== Frequently Asked Questions ==
 
 = How do I use this plugin if I don't have a MoFuse account? =
 
@@ -42,6 +42,4 @@ It takes just seconds to create a mobile-friendly version of your blog using MoF
 = Will my old posts be mobilized, or just my RSS feed? =
 
 We've implemented new technology in this version that can serve up the mobile version of some of your old blog posts. This is very useful for people who find a blog post from a mobile search.
-
-
  
