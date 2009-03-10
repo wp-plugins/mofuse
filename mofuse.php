@@ -4,7 +4,7 @@ Plugin Name: MoFuse Plugin
 Plugin URI: http://www.mofuse.com/wordpress/
 Description: MoFuse's Wordpress plugin. If you need a MoFuse account, visit <a href="http://www.mofuse.com">www.mofuse.com</a> and create a free account and you can have a mobile version of your Wordpress blog up and running in just seconds.
 Author: David Berube
-Version: 0.9n
+Version: 0.9o
 Author URI: http://daveberube.com/
 */
 
@@ -28,6 +28,10 @@ function wp_mf_mobile_detect() {
 	global $mf_site_url;
 	global $mf_iphone;
 
+	global $mf_sid;
+	global $mf_cname;
+	global $mf_redirect;
+		
 	if ($_SESSION['mofuse_nomobile']==1 || $_GET['nomobile']==1) { $_SESSION['mofuse_nomobile']=1; } else {
 		// Access MoFuse API to detect mobile device
 		$mf_ua=$_SERVER["HTTP_USER_AGENT"];
@@ -82,6 +86,8 @@ function wp_mf_mobile_detect() {
 				|| stripos($mf_ua, 'teleca') !== false
 				|| stripos($mf_ua, 'playstation') !== false
 				|| stripos($mf_ua, 'nitro') !== false
+				|| stripos($ua, 'lge') !== false
+				|| stripos($ua, 'lg-') !== false
 				|| stripos($mf_ua, 'nintendo wii') !== false;
 
 			if($isMobile) { $mf_ismobile=1; }
@@ -90,6 +96,22 @@ function wp_mf_mobile_detect() {
 	
 	}
 
+	if ($_GET['mofuse_debug']==1) {
+		echo '<div style="width: 400px; background-color: #fff; border: 1px solid #c1c1c1; padding: 5px; font-size: 11px; color: #333; margin: 10px;">';
+		echo "<strong>MoFuse Plugin Debug Console</strong> <br />";
+		echo "Mobile: {$mf_ismobile} <br/>";
+		echo "iPhone: {$mf_isiphone} <br/>";
+		echo "Android: {$mf_isandroid} <br/>";
+		echo "----------<br/>";
+		echo "Enabled: {$mf_redirect} <br/>";
+		echo "SiteID: {$mf_sid} <br/>";
+		echo "CNAME: {$mf_cname} <br/>";
+		echo "iPhone: {$mf_iphone}";
+		echo '</div>';
+		return;
+	}
+	
+	
 	if ($mf_isandroid==1 || $mf_isiphone==1) { $mf_ismobile=0; }
 
 	if (($mf_ismobile==1 || $mf_isandroid==1) || ($mf_isiphone==1 && $mf_iphone!="n")) {
