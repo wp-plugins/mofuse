@@ -3,7 +3,7 @@ Contributors: dberube
 Tags: mobile, mobilephone, cellphone, mofuse, xhtml, wap, handset, web
 Requires at least 2.0.2
 Test up to: 2.7.1
-Stable tag: 2.7
+Stable tag: 2.7.1
 
 This plugin works with a MoFuse account.  This plugin will automatically detect and redirect mobile visitors to the mobile-friendly version of your blog. Will also redirect iPhone and Android visitors to a special iPhone and Android version of your blog. This version includes MoFuse Deep Link which mobilizes older blog posts.
 
